@@ -36,3 +36,25 @@ router.put("/api/workouts/:id", (req, res) =>{
             res.json(err);
         })
 })
+router.get('/api/workoutd/range', (req, res)=>{
+    Exercise.aggregate([
+        {
+            $addFields: {
+                totalDuration:{
+                    $sum: '$exercises.duration',
+                },
+            },
+        },
+    ])
+    .sort({ day: -1})
+    .limit(7)
+    .sort({ _id:1 })
+    .then((data) =>{
+        console.log(data);
+        res.json(data)
+    })
+    .catch((err)=>{
+        res.json(err);
+    })
+})
+module.exports = router;
